@@ -16,7 +16,7 @@ router.post('/men', async (req, res) => {
 // get mens route
 router.get('/men', async (req, res) => {
     try {
-        const record = await MenModel.find({})
+        const record = await MenModel.find({}).sort({ "ranking": 1 });
         res.status(200).send(record);
     } catch (error) {
         res.status(400).send(error);
@@ -26,7 +26,7 @@ router.get('/men', async (req, res) => {
 router.get('/men/:id', async (req, res) => {
     try {
         const _id = req.params.id;
-        const record = await MenModel.find({ _id }).sort({ "ranking": 1 });
+        const record = await MenModel.find({ _id });
         res.status(200).send(record);
     } catch (error) {
         res.status(400).send(error);
