@@ -1,8 +1,13 @@
 const express = require("express")
 const path = require("path");
 const hbs = require("hbs");
-const Register = require("./models/register");
+const bcrypt = require("bcryptjs");
+//db
 require('./db/conn');
+// Schema
+const Register = require("./models/register");
+const { match } = require("assert");
+
 const port = process.env.PORT || 3000;
 const app = express();
 
@@ -63,7 +68,10 @@ app.post("/login", async (req, res) => {
         const userPassword = req.body.password;
 
         const userData = await Register.findOne({ email: userEmail });
-        if (userData.password === userPassword) {
+
+        const matchPassword = await bcrypt.compare(userPassword, userData.password);
+        console.log(matchPassword);
+        if (matchPassword) {
             res.status(201).render("index")
         } else {
             res.status(400).send('invalid infromation')

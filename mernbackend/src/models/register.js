@@ -45,9 +45,10 @@ const registerSchema = new mongoose.Schema({
 registerSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
         // const hashPassword = await bcrypt.hash(password, 10)
-        console.log(`your password: ${this.password}`)
+        
+        // console.log(`your password: ${this.password}`)
         this.password = await bcrypt.hash(this.password, 10);
-        console.log(`your password after hash: ${this.password}`)
+        // console.log(`your password after hash: ${this.password}`)
 
         // it will not store the confirm password filed in database;
         this.confirmpassword = undefined;
