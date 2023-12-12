@@ -39,12 +39,12 @@ app.post("/register", async (req, res) => {
                 age: req.body.age,
                 email: req.body.email,
                 password: req.body.password,
-                confirmpassword: req.body.cpassword,
+                confirmpassword: req.body.confirmpassword,
                 gender: req.body.gender,
             })
 
             const registered = await userData.save();
-            res.send(201).render('index')
+            res.status(201).render("index");
         } else {
             res.status(400).send("password did'nt match")
         }
