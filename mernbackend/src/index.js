@@ -6,7 +6,6 @@ const bcrypt = require("bcryptjs");
 require('./db/conn');
 // Schema
 const Register = require("./models/register");
-const { match } = require("assert");
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -48,7 +47,11 @@ app.post("/register", async (req, res) => {
                 gender: req.body.gender,
             })
 
+            const token = await userData.generateAuthToken();
+            // console.log(`token from index:${token}`)
+
             const registered = await userData.save();
+            // console.log(`registered from index:${registered}`)
             res.status(201).render("index");
         } else {
             res.status(400).send("password did'nt match")
@@ -71,6 +74,11 @@ app.post("/login", async (req, res) => {
 
         const matchPassword = await bcrypt.compare(userPassword, userData.password);
         // console.log(matchPassword);
+
+        const token = await userData.generateAuthToken();
+        console.log(`token from from ligin post:${token}`)
+
+
         if (matchPassword) {
             res.status(201).render("index")
         } else {
