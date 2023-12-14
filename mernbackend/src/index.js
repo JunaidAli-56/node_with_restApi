@@ -51,6 +51,12 @@ app.post("/register", async (req, res) => {
             const token = await userData.generateAuthToken();
             // console.log(`token from index:${token}`)
 
+            const oneHour = 60 * 60 * 1000;
+            res.cookie("jwt", token, {
+                expires: new Date(Date.now() + oneHour),
+                httpOnly: true
+            })
+            console.log(cookie);
             const registered = await userData.save();
             // console.log(`registered from index:${registered}`)
             res.status(201).render("index");
@@ -79,6 +85,11 @@ app.post("/login", async (req, res) => {
         const token = await userData.generateAuthToken();
         console.log(`token from from ligin post:${token}`)
 
+        res.cookie("jwt1", token, {
+            expires: new Date(Date.now() + 3000),
+            httpOnly: true,
+            secure:true
+        })
 
         if (matchPassword) {
             res.status(201).render("index")
