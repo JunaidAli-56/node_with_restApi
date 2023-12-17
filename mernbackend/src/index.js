@@ -3,10 +3,13 @@ const express = require("express")
 const path = require("path");
 const hbs = require("hbs");
 const bcrypt = require("bcryptjs");
+const cookieParser= require("cookie-parser")
 //db
 require('./db/conn');
 // Schema
 const Register = require("./models/register");
+// middleware
+const auth = require("./middleware/auth");
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -23,10 +26,15 @@ hbs.registerPartials(partials_path)
 
 
 app.use(express.json())
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }))
 
 app.get("/", (req, res) => {
     res.render("index")
+})
+app.get("/secret",auth, (req, res) => {
+    console.log(`getting the cookie value: ${req.cookie.jwt}`)
+    res.render("secret")
 })
 app.get("/register", (req, res) => {
     res.render("register")
@@ -90,6 +98,8 @@ app.post("/login", async (req, res) => {
             httpOnly: true,
             secure:true
         })
+
+        
 
         if (matchPassword) {
             res.status(201).render("index")
